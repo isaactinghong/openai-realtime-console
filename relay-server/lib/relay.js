@@ -30,6 +30,21 @@ export class RealtimeRelay {
       return;
     }
 
+    // Extract password from query parameters
+    const providedPassword = url.searchParams.get('password');
+    const expectedPassword = process.env.RELAY_PASSWORD; // Set in .env file
+
+    // print RELAY_PASSWORD
+    this.log(`RELAY_PASSWORD: ${expectedPassword}`);
+    // print providedPassword
+    this.log(`providedPassword: ${providedPassword}`);
+
+    if (providedPassword !== expectedPassword) {
+      this.log('Invalid password, closing connection.');
+      ws.close();
+      return;
+    }
+
     // Instantiate new client
     this.log(`Connecting with key "${this.apiKey.slice(0, 3)}..."`);
     const client = new RealtimeClient({ apiKey: this.apiKey });
